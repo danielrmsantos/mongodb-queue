@@ -1,6 +1,6 @@
 {
   "name": "mongodb-queue-ds",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Message queues which uses MongoDB forked from amazing package mongodb-queue created by Andrew Chilton",
   "main": "mongodb-queue.js",
   "scripts": {
@@ -26,7 +26,7 @@
     "email": "andychilton@gmail.com",
     "url": "http://chilts.org/"
   },
-  "contributors" : [
+  "contributors": [
     {
       "name": "Daniel Santos",
       "email": "danielrmsantos@gmail.com"

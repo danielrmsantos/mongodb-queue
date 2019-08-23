@@ -1,6 +1,6 @@
-# mongodb-queue #
+# mongodb-queue-ds #
 
-[![NPM](https://nodei.co/npm/mongodb-queue.png?mini=true)](https://nodei.co/npm/mongodb-queue/)
+[![NPM](https://nodei.co/npm/mongodb-queue-ds.png?mini=true)](https://www.npmjs.com/package/mongodb-queue-ds/)
 
 This repo is a fork of the very useful mongodb-queue done by Andrew Chilton available at https://github.com/chilts/mongodb-queue
 

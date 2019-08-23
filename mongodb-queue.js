@@ -266,3 +266,17 @@ Queue.prototype.done = function(callback) {
         callback(null, count)
     })
 }
+
+Queue.prototype.failed = function(callback) {
+    var self = this
+
+    var query = {
+        deleted : { $exists : true },
+        tries: {  $gt : 5 }
+    }
+
+    self.col.countDocuments(query, function(err, count) {
+        if (err) return callback(err)
+        callback(null, count)
+    })
+}

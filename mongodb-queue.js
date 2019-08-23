@@ -272,7 +272,7 @@ Queue.prototype.failed = function(callback) {
 
     var query = {
         deleted : { $exists : true },
-        tries: {  $gt : 5 }
+        tries: {  $gt : self.maxRetries }
     }
 
     self.col.countDocuments(query, function(err, count) {

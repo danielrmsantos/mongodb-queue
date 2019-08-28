@@ -1,6 +1,6 @@
 {
   "name": "mongodb-queue-ds",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Message queues which uses MongoDB forked from amazing package mongodb-queue created by Andrew Chilton",
   "main": "mongodb-queue.js",
   "scripts": {

@@ -22,6 +22,18 @@ queue.failed((err, count) => {
 })
 ```
 
+### .bulkGet() ###
+
+Returns an array with multiple messages from queue.
+
+Use options ```multiple: true, bulkLimit: 10``` where ```bulkLimit``` is the number of messages you want to retrieve from the queue.
+
+```js
+queue.bulkGet({ visibility: visibility, multiple: true, bulkLimit: 10 }(err, msgs) => {
+    console.log(msgs)
+})
+```
+
 ## Credits ##
 
 ```
@@ -42,4 +54,3 @@ danielrmsantos@gmail.com
 
 MIT - http://chilts.mit-license.org/2014/
 
-(Ends)

@@ -280,3 +280,87 @@ Queue.prototype.failed = function(callback) {
         callback(null, count)
     })
 }
+
+Queue.prototype.bulkGet = async function (opts, callback) {
+    var self = this
+    let msgs = []
+    if (!callback) {
+        callback = opts
+        opts = {}
+    }
+
+    if (opts.multiple && opts.bulkLimit) {
+        for (let i = 0; i < opts.bulkLimit; i++) {
+            var visibility = opts.visibility || self.visibility
+            var query = {
+                deleted: null,
+                visible: { $lte: now() },
+            }
+            var sort = {
+                _id: 1
+            }
+            var update = {
+                $inc: { tries: 1 },
+                $set: {
+                    ack: id(),
+                    visible: nowPlusSecs(visibility),
+                }
+            }
+
+            let myPromise = () => {
+                try {
+                    return new Promise((resolve, reject) => {
+                        self.col.findOneAndUpdate(query, update, { sort: sort, returnOriginal: false }, function (err, result) {
+                        //if (err) return callback(err)
+                        var msg = result.value
+                        //if (!msg) return callback()
+
+                        if (!err && msg) {
+                            // convert to an external representation
+                            msg = {
+                                // convert '_id' to an 'id' string
+                                id: '' + msg._id,
+                                ack: msg.ack,
+                                payload: msg.payload,
+                                tries: msg.tries,
+                            }
+                            // if we have a deadQueue, then check the tries, else don't
+                            if (self.deadQueue) {
+                                // check the tries
+                                if (msg.tries > self.maxRetries) {
+                                    // So:
+                                    // 1) add this message to the deadQueue
+                                    // 2) ack this message from the regular queue
+                                    // 3) call ourself to return a new message (if exists)
+                                    self.deadQueue.add(msg, function (err) {
+                                        if (err) return callback('error 1: ' + err)
+                                        self.ack(msg.ack, function (err) {
+                                            if (err) return callback('error 2: ' + err)
+                                            self.get(callback)
+                                        })
+                                    })
+                                    return
+                                }
+                            }
+
+                            msgs.push(msg)
+                        }
+
+                        err
+                            ? reject(err)
+                            : resolve('resolve')
+                    })
+                })
+                } catch (error) {
+                    console.log('error on promise bulk get')
+                    console.log(error)
+                }
+            }
+            let result = await myPromise()
+        }
+
+        callback(null, msgs)
+    }
+
+
+}
